@@ -1,0 +1,4 @@
+worktree-path = "{{ repo_path }}/.worktrees/{{ branch | sanitize }}"
+
+[commit.generation]
+command = 'cat | ~/.config/worktrunk/generate-commit.sh'
