@@ -1,0 +1,41 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "lmstudio": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "LM Studio (GPU)",
+      "options": {
+        "baseURL": "http://192.168.2.4:1234/v1"
+      }
+    }
+  },
+  "plugin": [
+    "superpowers@git+https://github.com/obra/superpowers.git"
+  ],
+  "mcp": {
+    "backlog": {
+      "type": "local",
+      "command": [
+        "backlog",
+        "mcp",
+        "start"
+      ]
+    },
+    "dependencies": {
+      "type": "local",
+      "command": [
+        "bunx",
+        "dependency-mcp"
+      ]
+    },
+    "pencil": {
+      "command": [
+        "/Applications/Pencil.app/Contents/Resources/app.asar.unpacked/out/mcp-server-darwin-arm64",
+        "--app",
+        "desktop"
+      ],
+      "enabled": true,
+      "type": "local"
+    }
+  }
+}
