@@ -1,0 +1,55 @@
+#!/bin/bash
+
+dir=$(dirname -- "$(readlink -f "${BASH_SOURCE}")")
+source $dir/../helpers
+
+packages=(
+  'sccache' # build cache
+  'dasel'   # config editor
+
+  'cargo-auditable' # auditable build https://github.com/rust-secure-code/cargo-auditable 
+  'cargo-audit'     # audit checks https://github.com/RustSec/rustsec/tree/main/cargo-audit
+
+  'cargo-about'     # show list of all licences, features, etc. https://github.com/EmbarkStudios/cargo-about
+  'cargo-deny'      # various checks (licenses, features, etc.) https://github.com/EmbarkStudios/cargo-deny
+
+  'cargo-binstall'  # install cargo packages binaries from github releases https://github.com/cargo-bins/cargo-binstall
+  'cargo-nextest'   # better test runner https://github.com/nextest-rs/nextest
+)
+
+cargo_binaries=(
+  'cargo-hakari'    # manage workspace-hack crates to improve build time https://github.com/guppy-rs/guppy
+  'cargo-selector'  # select and execute binary/example targets https://github.com/lusingander/cargo-selector
+
+  # 'cargo-outdated'  # find outdated dependencies https://github.com/kbknapp/cargo-outdated
+  # 'cargo-shear'     # remove unused dependencies https://github.com/Boshen/cargo-shear
+
+  # 'cargo-modules'      # show tree of modules https://github.com/regexident/cargo-modules
+  # 'cargo-show-asm'     # show generated assembly https://github.com/pacak/cargo-show-asm
+  # 'cargo-expand'       # show result of macro expansion https://github.com/dtolnay/cargo-expand 
+  # 'cargo-sort-derives' # sort derive attributes https://github.com/lusingander/cargo-sort-derives
+
+  # 'cargo-semver-checks' # check semver violations https://github.com/obi1kenobi/cargo-semver-checks
+)
+
+if ! installed "rustup-init"; then
+  packages+=("rustup")
+fi
+
+header "Installing rust and cargo packages"
+brew_install ${packages[*]}
+
+header "Setup rust stable toolchain"
+run "rustup-init -y -c rust-analyzer"
+export PATH="$PATH:~/.cargo/bin"
+
+header "Configure cargo"
+cargo_conf="~/.cargo/config.toml"
+run "mkdir -p $(dirname $cargo_conf)"
+run "touch $cargo_conf"
+run "dasel put -f $cargo_conf -t string -v $(command -v sccache) 'build.rustc-wrapper'"
+
+header "Build cargo binaries"
+cargo_install ${cargo_binaries[*]}
+
+eval $dir/configure

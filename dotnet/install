@@ -1,0 +1,17 @@
+#!/bin/bash
+
+dir=$(dirname -- "$(readlink -f "${BASH_SOURCE}")")
+source $dir/../helpers
+
+packages=(
+  'dotnet-sdk'
+)
+
+header "Installing dotnet packages"
+run "brew tap isen-ng/dotnet-sdk-versions"
+brew_install ${packages[*]}
+
+# TODO: install lang server
+# TODO: install debugger
+
+exec $dir/configure

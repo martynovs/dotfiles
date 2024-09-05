@@ -1,0 +1,8 @@
+#!/bin/bash
+
+dir=$(dirname -- "$(readlink -f "${BASH_SOURCE}")")
+source $dir/../helpers
+
+header "Configuring env packages"
+
+add_fish_config "$dir/env_config.fish"
