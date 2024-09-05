@@ -1,0 +1,18 @@
+#!/bin/bash
+
+dir=$(dirname -- "$(readlink -f "${BASH_SOURCE}")")
+source $dir/../helpers
+
+add_fish_config "$dir/configs/macos.fish"
+
+
+header "Configuring ghostty"
+ghostty_dir="$HOME/.config/ghostty"
+run "mkdir -p $ghostty_dir"
+run "ln -sf $dir/configs/ghostty.config $ghostty_dir/config"
+
+
+header "Configuring aerospace"
+aerospace_dir="$HOME/.config/aerospace"
+run "mkdir -p $aerospace_dir"
+run "ln -sf $dir/configs/aerospace.toml $aerospace_dir/aerospace.toml"

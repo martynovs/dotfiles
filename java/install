@@ -1,0 +1,13 @@
+#!/bin/bash
+
+dir=$(dirname -- "$(readlink -f "${BASH_SOURCE}")")
+source $dir/../helpers
+
+packages=(
+  'openjdk'
+)
+
+header "Install brew packages"
+brew_install ${packages[*]}
+
+source $dir/configure

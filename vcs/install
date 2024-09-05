@@ -1,0 +1,13 @@
+#!/bin/bash
+
+dir=$(dirname -- "$(readlink -f "${BASH_SOURCE}")")
+source $dir/../helpers
+
+run_installer $dir/install.ts
+
+if is_macos; then
+    run "gh extension install github/gh-copilot"
+    run "gh extension install dlvhdr/gh-dash" # tui dashboard for github PR's
+fi
+
+source $dir/configure

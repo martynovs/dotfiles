@@ -1,0 +1,8 @@
+#!/bin/bash
+
+dir=$(dirname -- "$(readlink -f "${BASH_SOURCE}")")
+source $dir/../helpers
+
+run_installer $dir/install.ts
+
+# source $dir/configure

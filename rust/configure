@@ -1,0 +1,12 @@
+#!/bin/bash
+
+dir=$(dirname -- "$(readlink -f "${BASH_SOURCE}")")
+source $dir/../helpers
+
+add_fish_config "$dir/rust.fish"
+
+header "Configuring cargo"
+cargo_conf="~/.cargo/config.toml"
+run "mkdir -p $(dirname $cargo_conf)"
+run "touch $cargo_conf"
+run "dasel put -f $cargo_conf -t string -v 'sccache' 'build.rustc-wrapper'"

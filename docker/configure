@@ -1,0 +1,7 @@
+#!/bin/bash
+
+dir=$(dirname -- "$(readlink -f "${BASH_SOURCE}")")
+source $dir/../helpers
+
+header "Setup config files"
+add_fish_config "$dir/docker.fish"

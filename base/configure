@@ -1,0 +1,65 @@
+#!/bin/bash
+
+dir=$(dirname -- "$(readlink -f "${BASH_SOURCE}")")
+source $dir/../helpers
+
+
+header "Configuring fish shell"
+
+shell=$(command -v fish || echo 'none')
+if [[ "$shell" == "none" ]]; then
+  run "brew install fish || true"
+  run "brew unlink fish && brew link fish"
+  shell=$(command -v fish)
+fi
+
+if ! grep -q $shell /etc/shells; then
+  header "Add fish to /etc/shells"
+  if im_root; then
+    echo $shell | tee -a /etc/shells
+  else
+    echo $shell | sudo tee -a /etc/shells
+  fi
+fi
+
+if [[ "$SHELL" != "$shell" ]]; then
+  header "Register fish as default shell"
+  if sudo -n true 2>/dev/null; then
+    sudo chsh -s $shell $(whoami)
+  else
+    chsh -s $shell
+  fi
+  echo $shell
+fi
+
+header "Setup fish configs"
+fish_dir=$(fish_home)
+run "mkdir -p $fish_dir"
+run "ln -sf $dir/configs/fish/config.fish $fish_dir/config.fish"
+run "ln -sf $dir/configs/fish/fish_plugins $fish_dir/fish_plugins"
+add_fish_function "$dir/configs/fish/functions/__fish_brew_home.fish"
+add_fish_config "$dir/configs/shell.fish"
+add_fish_config "$dir/configs/direnv.fish"
+
+if [ -t 0 ]; then
+  # this works only in interactive mode
+  run "fish -c 'fisher update > /dev/null'"
+fi
+
+
+header "Configuring starship"
+
+run "ln -sf $dir/configs/starship.toml ~/.config/starship.toml"
+
+
+header "Configuring direnv"
+
+direnv_dir="$HOME/.config/direnv"
+run "mkdir -p $direnv_dir"
+run "ln -sf $dir/configs/direnv.toml $direnv_dir/direnv.toml"
+
+
+header "Configuring bat"
+
+run "mkdir -p $(bat --config-dir)"
+run "ln -sf $dir/configs/bat.config $(bat --config-file)"
