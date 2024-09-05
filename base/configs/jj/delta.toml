@@ -1,0 +1,6 @@
+--when.commands = ["diff", "show"]
+
+[ui]
+pager = "delta"
+diff.format = "git"
+

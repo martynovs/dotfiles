@@ -1,0 +1,17 @@
+#!/bin/bash
+
+dir=$(dirname -- "$(readlink -f "${BASH_SOURCE}")")
+source $dir/../helpers
+
+packages=(
+  'node' # node.js
+
+  # lang servers
+  'typescript-language-server' 
+  'vscode-langservers-extracted'
+)
+
+header "Install brew packages"
+brew_install ${packages[*]}
+
+# source $dir/configure

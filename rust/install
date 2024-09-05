@@ -1,0 +1,10 @@
+#!/bin/bash
+
+dir=$(dirname -- "$(readlink -f "${BASH_SOURCE}")")
+source $dir/../helpers
+
+export PATH="$PATH:~/.cargo/bin"
+
+$dir/install.ts $(pkg_manager) | bash
+
+source $dir/configure

@@ -1,0 +1,70 @@
+#!/bin/bash
+
+dir=$(dirname -- "$(readlink -f "${BASH_SOURCE}")")
+source $dir/../helpers
+
+header "Configuring VCS"
+
+username=$(git config user.name || gum input --placeholder "Your username for commits")
+usermail=$(git config user.email || gum input --placeholder "Your email for commits")
+
+header "Configuring jj"
+
+jj_conf_dir="$HOME/.config/jj/conf.d/"
+mkdir -p $jj_conf_dir
+run "ln -sf $dir/configs/jj/* $jj_conf_dir"
+
+jj_conf="$HOME/.config/jj/config.toml"
+touch $jj_conf
+run "dasel put -f $jj_conf -t string -v '$username' user.name"
+run "dasel put -f $jj_conf -t string -v '$usermail' user.email"
+
+
+header "Configuring git"
+# check this for inspiration https://github.com/paulirish/dotfiles/blob/main/.gitconfig
+# and view this presentaion https://www.youtube.com/watch?v=aolI_Rz0ZqY
+
+gals() { run "git config set --global alias.$1 \"$2\""; }
+gset() { run "git config set --global $1 \"$2\""; }
+gyes() { run "git config set --global --type bool $1 true"; }
+
+gset user.name $username
+gset user.email $usermail
+gset init.defaultBranch main
+
+# aliases
+gals st status
+gals co checkout
+gals br branch
+gals ci "commit -S"
+gals md amend
+gals fpush "push --force-with-lease"
+gals spush "push --signed"
+gals fspush "push --force-with-lease --signed"
+
+# update branches that depend on rebased commits and remember conflits resolution for future
+gyes rerere.enabled
+gyes rebase.updateRefs
+
+# show git branch output in multiple columns sorted by last commit date
+gset column.ui auto
+gset branch.sort -commiterdate
+
+# use ssh to sign commits
+gset gpg.format ssh
+gset user.signingkey ~/.ssh/id_ed25519.pub
+
+# use git-delta to colorize diff
+gset core.pager delta
+gset merge.conflictstyle diff3
+gset diff.colorMoved default
+gset interactive.diffFilter "delta --color-only --features=interactive"
+gyes delta.navigate
+gyes delta.line-numbers
+gyes delta.hyperlinks
+gset delta.features decorations
+gset delta.hyperlinks-file-link-format "vscode://file/{path}:{line}"
+gset delta.file-style "bold yellow ul"
+gset delta.file-decoration-style "yellow ol ul"
+gset delta.hunk-header-decoration-style "blue"
+gset delta.hunk-header-line-number-style "purple bold"

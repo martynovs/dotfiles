@@ -1,0 +1,55 @@
+#!/bin/bash
+
+dir=$(dirname -- "$(readlink -f "${BASH_SOURCE}")")
+source $dir/helpers
+
+export NONINTERACTIVE=1
+export HOMEBREW_NO_INSTALL_CLEANUP=1
+brew_path="/home/linuxbrew/.linuxbrew"
+macos_brew_path="/opt/homebrew"
+
+if installed "apt"; then
+  update_apt
+  install_apt_packages 'build-essential curl git golang'
+
+  run "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash"
+  source "$HOME/.nvm/nvm.sh"
+  run "nvm install --lts"
+
+elif installed "dnf"; then
+  install_dnf_packages 'procps-ng gcc curl file git libgit2 gawk nodejs golang'
+
+elif is_macos; then
+  unset NONINTERACTIVE
+  brew_path="$macos_brew_path"
+
+else
+  echo "Unsupported linux distribution"
+  exit 1
+fi
+
+header "Installing brew"
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+if ! grep -q "brew shellenv" ~/.bashrc; then
+  echo "eval \"\$($brew_path/bin/brew shellenv)\"" >> ~/.bashrc
+fi
+eval "$($brew_path/bin/brew shellenv)"
+
+if [[ "$brew_path" != "$macos_brew_path" ]]; then
+  run "ln -sf $brew_path $macos_brew_path"
+fi
+
+export GOPATH="$HOME/.go"
+if ! grep -q "$GOPATH" ~/.bashrc; then
+  echo "GOPATH=$GOPATH" >> ~/.bashrc
+  echo "PATH=\$PATH:$GOPATH/bin" >> ~/.bashrc
+fi
+export PATH="$PATH:$GOPATH/bin"
+
+
+header "Installing packages"
+eval $dir/add_pkg base $*
+
+header "Installation completed"
+source ~/.bashrc
+exec fish

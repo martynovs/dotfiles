@@ -1,0 +1,15 @@
+#!/bin/bash
+
+dir=$(dirname -- "$(readlink -f "${BASH_SOURCE}")")
+source $dir/../helpers
+
+$dir/install.ts $(pkg_manager) | bash
+
+bat_dir=$(bat --config-dir)
+wget -P "$bat_dir/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Frappe.tmTheme
+
+if is_macos; then
+    run "gh extension install dlvhdr/gh-dash" # tui dashboard for github PR's
+fi
+
+source $dir/configure

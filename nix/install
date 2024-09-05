@@ -1,0 +1,21 @@
+#!/bin/bash
+
+dir=$(dirname -- "$(readlink -f "${BASH_SOURCE}")")
+source $dir/../helpers
+
+if [ -e /.dockerenv ]; then
+    run "useradd -m nix || true"
+    run "groupadd nixbld -U nix"
+    run "mkdir -p /nix"
+    run "chown nix /nix"
+    run "sudo -u nix bash -c 'sh <(curl -L https://nixos.org/nix/install) --no-daemon'"
+    run "ln -s /home/nix/.nix-profile ~"
+    run "echo 'export USER=root' >> ~/.bash_profile"
+    run "echo 'if [ -e ~/.nix-profile/etc/profile.d/nix.sh ]; then . ~/.nix-profile/etc/profile.d/nix.sh; fi' >> ~/.bash_profile"
+    USER=root source /home/nix/.nix-profile/etc/profile.d/nix.sh
+    run "nix-channel --add https://nixos.org/channels/nixpkgs-unstable"
+    run "nix-channel --update"
+    run "nix-shell -p neofetch --run neofetch"
+else
+    run "sh <(curl -L https://nixos.org/nix/install)"
+fi

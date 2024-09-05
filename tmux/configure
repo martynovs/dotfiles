@@ -1,0 +1,13 @@
+#!/bin/bash
+
+dir=$(dirname -- "$(readlink -f "${BASH_SOURCE}")")
+source $dir/../helpers
+
+add_fish_config "$dir/tmux.fish"
+
+header "Configuring tmux"
+tmux_dir="$HOME/.tmux"
+run "mkdir -p $tmux_dir"
+run "ln -sf $dir/tmux.conf $HOME/.tmux.conf"
+run "echo \"run $(brew --prefix)/opt/tpm/share/tpm/tpm\" > $tmux_dir/tmux.conf"
+run "$(brew --prefix)/opt/tpm/share/tpm/bin/install_plugins"
