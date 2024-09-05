@@ -1,0 +1,5 @@
+--when.commands = ["status"]
+
+[ui]
+paginate = "never"
+

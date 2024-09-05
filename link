@@ -1,0 +1,34 @@
+#!/bin/bash
+
+dir=$(dirname -- "$(readlink -f "${BASH_SOURCE[0]}")")
+
+color="\033[1m\033[0;32m"
+plain="\033[0m"
+
+link_dir() {
+    local source_dir target_dir
+    source_dir=$(realpath -q "$dir/$1")
+    target_dir=$(realpath -q "$HOME/$2")
+    mkdir -p "$target_dir"
+
+    echo -e "${color}Setup config files from:${plain} $source_dir"
+
+    find "$source_dir" -type f -print0 | while IFS= read -r -d '' file; do
+        rel_path=${file#"$source_dir/"}
+        target_file="$target_dir/$rel_path"
+
+        if [[ -L $target_file ]]; then
+          ln_flags="-sf"
+        else
+          ln_flags="-s"
+        fi
+
+        mkdir -p "$(dirname "$target_file")"
+        echo -e "~${target_file#"$HOME"}"
+        ln $ln_flags "$file" "$target_file"
+    done
+}
+
+link_dir dot_config .config
+echo ""
+link_dir dot_claude .claude

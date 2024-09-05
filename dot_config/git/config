@@ -1,0 +1,73 @@
+[include]
+    path = ~/.config/git/alias
+[include]
+    path = ~/.config/git/user
+[include]
+    path = ~/.config/git/diff
+[include]
+    path = ~/.config/git/colors
+[include]
+    path = ~/.config/git/lfs
+
+[url "git@github.com:"]
+	insteadOf = "gh:"
+
+[core]
+	compression = 9
+	looseCompression = 6
+
+[init]
+	defaultBranch = main
+
+[status]
+	short = true
+	branch = true
+	showStash = true
+	showUntrackedFiles = all
+
+[log]
+    abbrevCommit = true
+    graphColors = blue,yellow,cyan,magenta,green,red
+
+[blame]
+    coloring = highlightRecent
+    date = relative
+
+[commit]
+	template = ~/.config/git/template
+	verbose = true
+
+[push]
+	autoSetupRemote = true
+	default = current
+
+[pull]
+    rebase = true
+    default = current
+
+[rebase]
+	autoStash = true
+	updateRefs = true
+    missingCommitsCheck = warn # warn if rebasing with missing commits
+
+[merge]
+	conflictstyle = diff3
+
+[branch]
+	sort = -committerdate
+
+[tag]
+    sort = -taggerdate
+
+[pager]
+	branch = false
+	tag = false
+
+[rerere]
+	enabled = true
+
+[column]
+	ui = auto
+
+[gpg]
+	format = ssh

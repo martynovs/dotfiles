@@ -1,0 +1,139 @@
+#!/bin/bash
+
+set -euo pipefail
+
+self="$(readlink -f "${BASH_SOURCE[0]}")"
+dir=$(dirname -- "$self")
+
+run() { echo "$1"; eval "$1"; }
+header() { echo; echo -e "\033[1m\033[0;32m$1\033[0m"; }
+im_root() { [[ $EUID -eq 0 ]]; }
+is_macos() { [[ $OSTYPE == 'darwin'* ]]; }
+installed() { [ -x "$(command -v "$1")" ]; }
+sudo_prefix() { [[ $EUID -eq 0 ]] && echo "" || echo "sudo "; }
+
+
+if ! installed "git"; then
+  if installed "apt"; then
+    header "Installing Git"
+    run "$(sudo_prefix)apt update 2>&1 >/dev/null"
+    run "$(sudo_prefix)apt install -y -qq git"
+  elif installed "dnf"; then
+    header "Installing Git"
+    run "$(sudo_prefix)dnf -yq install git"
+  else
+    echo "Git is not installed. Please install it and try again."
+    exit 1
+  fi
+fi
+
+
+# When installing from curl there is no self
+if [ -z "$self" ]; then
+  header "Cloning dotfiles repo"
+  run "git clone --depth 1 https://github.com/martynovs/dotfiles.git dotfiles" || exit
+  dir="$(readlink -f dotfiles)"
+fi
+
+
+export NONINTERACTIVE=1
+export DEBIAN_FRONTEND=noninteractive
+export HOMEBREW_NO_INSTALL_CLEANUP=1
+brew_path="/home/linuxbrew/.linuxbrew"
+macos_brew_path="/opt/homebrew"
+
+if installed "apt"; then
+  run "$(sudo_prefix)apt update 2>&1 >/dev/null"
+  run "$(sudo_prefix)apt install -y -qq build-essential curl git"
+
+elif installed "dnf"; then
+  run "$(sudo_prefix)dnf -yq install procps-ng gcc git"
+
+elif is_macos; then
+  unset NONINTERACTIVE
+  brew_path="$macos_brew_path"
+
+else
+  echo "Unsupported OS"
+  exit 1
+fi
+
+
+# Apple containers run without home directory and docker markers, also non working sudo
+if [ -z "$HOME" ]; then
+  if [ -z "$USER" ]; then
+    USER="$(whoami)"
+    export USER
+  fi
+  export HOME="/root"
+  # Homebrew requires home directory and .bashrc file
+  echo "export HOME=$HOME" >> "$HOME/.bashrc"
+  # sudo require hostname to be resolved
+  echo "127.0.0.1 $(hostname)" >> /etc/hosts
+  # docker marker
+  touch /.dockerenv
+fi
+
+
+if ! installed "brew"; then
+  if ! installed "$brew_path/bin/brew"; then
+    header "Installing Homebrew"
+    bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    if ! grep -q "brew shellenv" "$HOME/.bashrc"; then
+      echo "eval \"\$($brew_path/bin/brew shellenv)\"" >> "$HOME/.bashrc"
+    fi
+  fi
+  eval "$($brew_path/bin/brew shellenv)"
+fi
+
+
+if ! installed "bun"; then
+  header "Installing Bun"
+  brew tap "oven-sh/bun"
+  brew install "oven-sh/bun/bun"
+fi
+
+
+export GOPATH="$HOME/.go"
+export PATH="$PATH:$GOPATH/bin"
+if ! grep -q "GOPATH" "$HOME/.bashrc"; then
+  echo "export GOPATH=\"$GOPATH\"" >> "$HOME/.bashrc"
+  echo "export PATH=\$PATH:$GOPATH/bin" >> "$HOME/.bashrc"
+fi
+
+export PATH="$PATH:$HOME/.cargo/bin"
+if ! grep -q "$HOME/.cargo/bin" "$HOME/.bashrc"; then
+  echo "export PATH=\$PATH:$HOME/.cargo/bin" >> "$HOME/.bashrc"
+fi
+
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_CACHE_HOME="$HOME/.cache"
+if ! grep -q "XDG_CONFIG_HOME" "$HOME/.bashrc"; then
+  echo "export XDG_CONFIG_HOME=\"$XDG_CONFIG_HOME\"" >> "$HOME/.bashrc"
+  echo "export XDG_CACHE_HOME=\"$XDG_CACHE_HOME\"" >> "$HOME/.bashrc"
+fi
+
+
+echo
+"$dir/link"
+
+echo
+"$dir/install" "base" "$@"
+
+
+header "Installation completed"
+
+install_more_packages() {
+  local packages
+  packages=$(find "$dir/installers/" -mindepth 1 -maxdepth 1 -type d ! -name base -exec basename {} \; | sort)
+  if [ -n "$packages" ]; then
+    packages=$(gum choose --no-limit "$packages")
+  fi
+  if [ -n "$packages" ]; then
+    eval "$dir/install" "$packages"
+  fi
+}
+
+installed "gum" && gum confirm "Do you want to install more packages?" && install_more_packages || true
+
+exec fish

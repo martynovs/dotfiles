@@ -1,0 +1,60 @@
+{
+  "cleanupPeriodDays": 10,
+  "env": {
+    "MAX_THINKING_TOKENS": "50000",
+    "HTTP_PROXY": "http://127.0.0.1:12334",
+    "HTTPS_PROXY": "http://127.0.0.1:12334",
+    "NO_PROXY": "localhost,127.0.0.1",
+    "DISABLE_TELEMETRY": "1",
+    "DISABLE_AUTOUPDATER": "1",
+    "DISABLE_ERROR_REPORTING": "1",
+    "DISABLE_NON_ESSENTIAL_MODEL_CALLS": "1",
+    "CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY": "1",
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "80",
+    "ENABLE_TOOL_SEARCH": "auto:5"
+  },
+  "permissions": {
+    "allow": [
+      "Skill(pastel)"
+    ],
+    "deny": [
+      "Read(~/.ssh/**)",
+      "Edit(~/.ssh/**)",
+      "Read(~/.aws/**)",
+      "Edit(~/.aws/**)",
+      "Read(~/.kube/**)",
+      "Edit(~/.kube/**)",
+      "Read(~/.config/**)",
+      "Edit(~/.config/**)",
+      "Read(~/Library/**)",
+      "Edit(~/Library/**)",
+      "Read(.env*)",
+      "Edit(.env*)",
+      "Bash(rm -rf *)",
+      "Bash(rm -fr *)",
+      "Bash(sudo *)",
+      "Bash(mkfs *)",
+      "Bash(dd *)",
+      "Bash(wget *|*bash*)",
+      "Bash(git push --force*)",
+      "Bash(git push *--force*)",
+      "Bash(git reset --hard*)"
+    ],
+    "defaultMode": "acceptEdits"
+  },
+  "enableAllProjectMcpServers": true,
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/statusline.sh"
+  },
+  "sandbox": {
+    "enabled": true,
+    "autoAllowBashIfSandboxed": true
+  },
+  "spinnerTipsEnabled": false,
+  "plansDirectory": "./docs/plans",
+  "effortLevel": "medium",
+  "showTurnDuration": false,
+  "terminalProgressBarEnabled": false
+}

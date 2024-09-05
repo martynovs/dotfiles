@@ -1,0 +1,122 @@
+# fonts
+font-size = 22
+font-family = "JetBrains Nerd Font"
+
+
+# window
+window-width = 999999
+window-height = 999999
+window-padding-x = 5
+window-padding-balance = true
+window-save-state = always
+window-colorspace = "display-p3"
+
+background = 070b1f
+# transparent..opaque = 0..1
+# background-opacity = 0.7
+background-opacity = 1
+# reasonable blur values 0..20 or true/false
+background-blur = 13
+
+
+# cursor
+cursor-style = block
+cursor-color = #f8b100
+cursor-opacity = 0.5
+cursor-style-blink = false
+shell-integration-features = no-cursor
+custom-shader = shaders/cursor_smear.glsl
+
+
+# quick terminal
+quick-terminal-size = "100%,100%"
+quick-terminal-position = bottom
+quick-terminal-animation-duration = 0
+keybind = global:super+§=toggle_quick_terminal
+
+
+# menu with all commands
+keybind = super+shift+p=unbind
+keybind = super+alt+§=toggle_command_palette
+
+macos-option-as-alt = true
+
+# Unbind undesired keys
+# esc:b
+keybind = alt+right=unbind
+# esc:f
+keybind = alt+left=unbind
+# write_screen_file:open
+keybind = super+alt+shift+j=unbind
+# write_screen_file:paste
+keybind = super+shift+j=unbind
+# inspector:toggle
+keybind = super+alt+i=unbind
+# open_config
+keybind = super+,=unbind
+# reload_config
+keybind = super+shift+,=unbind
+# select_all
+keybind = super+a=unbind
+# ctrl-a
+keybind = super+arrow_left=unbind
+# ctrl-e
+keybind = super+arrow_right=unbind
+# ctrl-u
+keybind = super+backspace=unbind
+
+
+# Disable windows/tabs and key bindings
+window-decoration = none
+macos-titlebar-style = hidden
+# new_window
+keybind = super+n=unbind
+# close_window
+keybind = super+shift+w=unbind
+# close_all_windows
+keybind = super+alt+shift+w=unbind
+# toggle_fullscreen
+keybind = super+enter=unbind
+keybind = super+ctrl+f=unbind
+# new_tab
+keybind = super+t=unbind
+# close_tab
+keybind = super+alt+w=unbind
+# next_tab
+keybind = ctrl+tab=unbind
+keybind = super+shift+bracket_right=unbind
+# previous_tab
+keybind = ctrl+shift+tab=unbind
+keybind = super+shift+bracket_left=unbind
+# goto_tab:n
+keybind = super+1=unbind
+keybind = super+2=unbind
+keybind = super+3=unbind
+keybind = super+4=unbind
+keybind = super+5=unbind
+keybind = super+6=unbind
+keybind = super+7=unbind
+keybind = super+8=unbind
+keybind = super+9=unbind
+
+
+# Disable splits with key bindings
+# new_split
+keybind = super+d=unbind
+keybind = super+shift+d=unbind
+# goto_split
+keybind = super+bracket_left=unbind
+keybind = super+bracket_right=unbind
+keybind = super+alt+arrow_up=unbind
+keybind = super+alt+arrow_down=unbind
+keybind = super+alt+arrow_left=unbind
+keybind = super+alt+arrow_right=unbind
+# resize_split
+keybind = super+ctrl+arrow_up=unbind
+keybind = super+ctrl+arrow_down=unbind
+keybind = super+ctrl+arrow_left=unbind
+keybind = super+ctrl+arrow_right=unbind
+# equalize_splits
+keybind = super+ctrl+equal=unbind
+# toggle_split_zoom
+keybind = super+shift+enter=unbind

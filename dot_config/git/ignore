@@ -1,0 +1,20 @@
+# MacOS
+.DS_Store
+
+# VCS
+.jj/*
+
+# IDE
+.idea/*
+.vscode/*
+!.vscode/mcp.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Python
+.venv/
+
+**/.claude/settings.local.json

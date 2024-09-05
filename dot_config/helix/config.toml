@@ -1,0 +1,67 @@
+theme = "my-gruvbox"
+
+[keys.normal]
+"S-down" = [
+  "extend_to_line_bounds",
+  "delete_selection",
+  "paste_after",
+  "select_mode",
+  "goto_line_start",
+  "normal_mode",
+] # Move line(s) down
+"S-up" = [
+  "extend_to_line_bounds",
+  "delete_selection",
+  "move_line_up",
+  "paste_before",
+  "flip_selections",
+] # Move line(s) up
+
+[keys.normal.space]
+# use yazi to select files
+C-f = [
+  ':sh rm -f /tmp/helix-file-selection',
+  ':insert-output yazi %{buffer_name} --chooser-file=/tmp/helix-file-selection',
+  ':insert-output echo "\x1b[?1049h\x1b[?2004h" > /dev/tty',
+  ':open %sh{cat /tmp/helix-file-selection}',
+  ':redraw',
+] 
+
+[keys.normal.space.C-t]
+"1" = ":theme my-gruvbox"
+"2" = ":theme my-gruvbox-material"
+"3" = ":theme my-voxed"
+"4" = ":theme my-adwaita"
+"5" = ":theme my-flexoki"
+"6" = ":theme my-onedark"
+"0" = ":config-reload"
+
+[keys.normal.space.C-t.C-t]
+"1" = ":theme my-iroaseta"
+"2" = ":theme my-vintage"
+"3" = ":theme my-noctis"
+"4" = ":theme my-merionette"
+"5" = ":theme my-monokai"
+
+[editor]
+color-modes = true
+end-of-line-diagnostics = "hint"
+# middle-click-paste = false
+# bufferline = "always"
+
+# [editor.statusline]
+# left = ["mode", "spinner", "file-absolute-path", "read-only-indicator", "file-modification-indicator", "separator", "version-control"]
+
+# [editor.cursor-shape]
+# insert = "underline"
+
+# [editor.file-picker]
+# hidden = false
+# ignore = false
+# git-ignore = false
+
+[editor.inline-diagnostics]
+cursor-line = "warning"
+
+[editor.lsp]
+display-inlay-hints = true

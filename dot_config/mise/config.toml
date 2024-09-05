@@ -1,0 +1,8 @@
+[tools]
+
+fd = "latest"
+sd = "latest"
+fzf = "latest"
+age = "latest"
+usage = "latest"
+"ubi:starship/starship" = "latest"

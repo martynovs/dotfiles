@@ -1,0 +1,6 @@
+git:
+  pagers:
+    - externalDiffCommand: difft --color=always
+
+gui:
+  sidePanelWidth: 0.25
