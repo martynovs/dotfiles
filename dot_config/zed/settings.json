@@ -1,0 +1,44 @@
+// Zed settings
+//
+// For information on how to configure Zed, see the Zed
+// documentation: https://zed.dev/docs/configuring-zed
+//
+// To see all of Zed's default settings without changing your
+// custom settings, run `zed: open default settings` from the
+// command palette (cmd-shift-p / ctrl-shift-p)
+{
+  "context_servers": {},
+  "languages": {
+    "JavaScript": {
+      "indent_guides": {
+        "background_coloring": "indent_aware",
+        "coloring": "indent_aware",
+      },
+    },
+  },
+  "project_panel": {
+    "dock": "right",
+  },
+  "language_models": {
+    "lmstudio": {
+      "api_url": "http://192.168.2.4:1234/api/v0",
+    },
+  },
+  "agent": {
+    "notify_when_agent_waiting": "all_screens",
+    "default_model": {
+      "effort": "high",
+      "provider": "copilot_chat",
+      "model": "gpt-5-mini",
+    },
+    "model_parameters": [],
+  },
+  "ui_font_size": 16,
+  "buffer_font_size": 16,
+  "theme": {
+    "mode": "system",
+    "light": "One Light",
+    "dark": "Kary Pro Colors Dark",
+  },
+  "proxy": "http://127.0.0.1:12334",
+}

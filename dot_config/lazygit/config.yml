@@ -1,0 +1,11 @@
+git:
+  pagers:
+    - externalDiffCommand: difft --color=always
+
+gui:
+  sidePanelWidth: 0.25
+
+keybinding:
+  universal:
+    quit: q
+    quit-alt1: §

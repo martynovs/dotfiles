@@ -1,0 +1,25 @@
+keys:
+  focus: enter
+  jump: f
+  search: /
+  new_session: "n"
+  new_tmux_session: "t"
+  kill_session: K
+  detail: d
+  stats: s
+  help: '?'
+  quit: q
+
+sidebar_width: 20
+refresh_interval: 200ms
+closed_session_hours: 6
+popup_width: 85
+popup_height: 85
+resume_in_current_session: true
+process_names:
+  - claude
+collapse_after_hours: 8
+active_window_secs: 5
+theme: catppuccin-mocha
+claude_command: claude
+new_session_dir: ""
