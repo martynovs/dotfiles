@@ -1,0 +1,22 @@
+[color "blame"]
+    highlightRecent = black bold,1 year ago,white,1 month ago,default,7 days ago,blue
+
+[color "diff"]
+    meta       = yellow bold
+    whitespace = yellow reverse
+    frag       = magenta
+    context    = white
+    old        = red
+
+[color "branch"]
+    current  = magenta
+    local    = default
+    remote   = yellow
+    upstream = green
+    plain    = blue
+
+[color.decorate]
+    HEAD = red
+    branch = blue
+    tag = yellow
+    remoteBranch = magenta
