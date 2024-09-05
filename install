@@ -1,0 +1,62 @@
+#!/bin/bash
+
+__installers_dir__="$(dirname -- "$(readlink -f "${BASH_SOURCE}")")/installers"
+
+declare -a args=()
+
+if [ -z "$1" ]; then
+  echo "Please specify packages to install."
+  echo "Available packages:"
+  for pkg in $(find $__installers_dir__ -mindepth 1 -maxdepth 1 -type d | sort); do
+    echo "  - ${pkg##*/}"
+  done
+  exit 0
+elif [ "$1" = "all" ]; then
+  for pkg in $(find $__installers_dir__ -mindepth 1 -maxdepth 1 -type d | sort); do
+    args+=("${pkg##*/}")
+  done
+else
+  args=("$@")
+fi
+
+set -- "${args[@]}"
+
+header() { echo; echo -e "\033[1m\033[0;32m$1\033[0m"; }
+
+if [ -x "$(command -v apt)" ]; then
+    pkg_manager='apt'
+elif [ -x "$(command -v dnf)" ]; then
+    pkg_manager='dnf'
+fi
+
+while (( "$#" ))
+do
+  pkg=$1
+  pkg_dir="$__installers_dir__/$pkg"
+  shift
+
+  if [ -x "$pkg_dir/install" ]; then
+    header "Installing $pkg"
+    source "$pkg_dir/install"
+
+  elif [ -f "$pkg_dir/install.ts" ]; then
+    header "Installing $pkg"
+    temp_file=$(mktemp)
+    eval "node --experimental-strip-types $pkg_dir/install.ts $pkg_manager > $temp_file"
+    source $temp_file
+    rm $temp_file
+
+  elif [ -f "$pkg_dir/brewfile" ]; then
+    header "Installing $pkg"
+    brew bundle --file="$pkg_dir/brewfile"
+
+  else
+    echo "Unknown package: $pkg"
+    exit 1
+  fi
+
+  if [ -x "$pkg_dir/configure" ]; then
+    header "Configuring $pkg packages"
+    source "$pkg_dir/configure"
+  fi
+done
