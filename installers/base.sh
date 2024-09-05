@@ -1,0 +1,46 @@
+#!/bin/bash
+
+dir=$(dirname -- "$(readlink -f "${BASH_SOURCE}")")
+source $dir/_helpers.sh
+
+
+header "Configuring yazi"
+run "ya pkg add bennyyip/gruvbox-dark || echo -n"
+run "ya pkg add yazi-rs/plugins:smart-enter || echo -n"
+
+
+header "Configuring fish shell"
+shell=$(command -v fish || echo 'none')
+if [[ "$shell" == "none" ]]; then
+  run "brew install fish || true"
+  run "brew unlink fish && brew link fish"
+  shell=$(command -v fish)
+fi
+
+if ! grep -q $shell /etc/shells; then
+  header "Add fish to /etc/shells"
+  echo $shell | $(sudo_prefix)tee -a /etc/shells
+fi
+
+if [[ "$SHELL" != "$shell" ]]; then
+  header "Register fish as default shell"
+  if sudo -n true 2>/dev/null; then
+    sudo chsh -s $shell $(whoami)
+  else
+    chsh -s $shell
+  fi
+  echo $shell
+fi
+
+header "Install fish plugins"
+if [ -t 0 ]; then
+  # this works only in interactive mode
+  run "fish -c 'fisher update > /dev/null'"
+else
+  echo "Please manually install fish plugins before running fish shell"
+  echo "If you are using bash first reload your current shell config with:"
+  echo "source ~/.bashrc"
+  echo "Then install fish plugins with:"
+  echo "fish -c 'fisher update'"
+  echo "After installation of plugins you can run: fish"
+fi
