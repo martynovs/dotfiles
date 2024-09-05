@@ -1,0 +1,12 @@
+[[language]]
+name = "c-sharp"
+scope = "source.cs"
+roots = [".sln", ".csproj"]
+file-types = ["cs", "csx"]
+language-servers = ["csharp-ls"]
+
+
+[[language]]
+name = "rust"
+formatter = { command = "rustfmt" }
+auto-format = true
