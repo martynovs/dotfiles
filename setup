@@ -1,0 +1,64 @@
+#!/bin/bash
+
+set -euo pipefail
+
+self="$(readlink -f "${BASH_SOURCE[0]}")"
+
+run() { echo "$1"; eval "$1"; }
+error() { echo; echo -e "\033[1m\033[0;31m$1\033[0m"; }
+header() { echo; echo -e "\033[1m\033[0;32m$1\033[0m"; }
+im_root() { [[ $EUID -eq 0 ]]; }
+is_macos() { [[ $OSTYPE == 'darwin'* ]]; }
+installed() { [ -x "$(command -v "$1")" ]; }
+sudo_prefix() { [[ $EUID -eq 0 ]] && echo "" || echo "sudo "; }
+
+
+if installed "apt"; then
+    header "Installing Prerequisites"
+    run "$(sudo_prefix)apt update 2>&1 >/dev/null"
+    run "$(sudo_prefix)apt install -y -qq git fish curl"
+elif installed "dnf"; then
+    header "Installing Prerequisites"
+    run "$(sudo_prefix)dnf -yq install git fish curl procps-ng"
+fi
+
+
+init_msg="Init chezmoi from current dir"
+init_path="." 
+if [ -z "$self" ]; then
+    # When installing from curl there is no self
+    init_msg="Init chezmoi from github repo"
+    init_path="martynovs"
+fi
+
+if ! installed "chezmoi"; then
+    export BINDIR=~/.local/bin
+    header "$init_msg"
+    sh -c "$(curl -fLs get.chezmoi.io)" -- init --apply "$init_path"
+fi
+
+
+header "Configuring fish shell"
+shell=$(command -v fish)
+if ! grep -q "$shell" /etc/shells; then
+  run "echo \"$shell\" | $(sudo_prefix)tee -a /etc/shells"
+fi
+
+if [[ "$SHELL" != "$shell" ]]; then
+  if sudo -n true 2>/dev/null; then
+    run "sudo chsh -s $shell $(whoami)"
+  else
+    run "chsh -s $shell"
+  fi
+fi
+
+if [ -t 0 ]; then
+  header "Install fish plugins"
+  # this works only in interactive mode
+  run "fish -c 'curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher update >/dev/null'"
+  exec fish
+else
+  echo "Please manually install fish plugins before running fish shell"
+  echo "fish -c 'curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher update'"
+  echo "After installation of plugins you can run: fish"
+fi

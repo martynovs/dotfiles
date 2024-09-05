@@ -1,0 +1,144 @@
+# Kary Pro Colors - Dark, ported to Helix
+# Original by Pouya Kary (GPL-3.0)
+
+# Syntax
+"comment" = { fg = "comment", modifiers = ["italic"] }
+
+"string" = "string"
+"string.regexp" = "orange"
+"string.special" = "blue"
+"string.quote" = "comment"
+
+"constant" = "green"
+"constant.builtin" = "green"
+"constant.builtin.boolean" = "pink"
+"constant.character" = "green"
+"constant.character.escape" = "orange"
+"constant.numeric" = "blue"
+
+"variable" = "blue"
+"variable.parameter" = "blue"
+"variable.other.member" = "orange"
+"variable.other.member.declaration" = "red"
+
+"label" = "green"
+
+"punctuation" = "fg"
+"punctuation.special" = "pink"
+
+"keyword" = "pink"
+"keyword.operator" = "pink"
+"keyword.storage" = "orange"
+"keyword.directive" = "orange"
+"keyword.function" = "orange"
+
+"operator" = "fg"
+
+"function" = "blue"
+"function.builtin" = "red"
+"function.method" = { fg = "red", modifiers = ["bold"] }
+"function.macro" = "orange"
+
+"tag" = "blue"
+"namespace" = "orange"
+"attribute" = "orange"
+"special" = "orange"
+
+"type" = "green"
+"type.enum.variant" = "blue"
+
+"constructor" = { fg = "red", modifiers = ["bold"] }
+
+# Markup
+"markup.heading" = { fg = "red", modifiers = ["bold"] }
+"markup.list" = "orange"
+"markup.bold" = { fg = "orange", modifiers = ["bold"] }
+"markup.italic" = { fg = "orange", modifiers = ["italic"] }
+"markup.strikethrough" = { fg = "comment", modifiers = ["crossed_out"] }
+"markup.link.url" = { fg = "blue", modifiers = ["underlined"] }
+"markup.link.label" = "pink"
+"markup.link.text" = "blue"
+"markup.quote" = { fg = "comment", modifiers = ["italic"] }
+"markup.raw" = "green"
+
+# Diff
+"diff.plus" = "green"
+"diff.minus" = "red"
+"diff.delta" = "orange"
+
+# UI
+"ui.background" = { bg = "background" }
+"ui.background.separator" = "comment"
+
+"ui.text" = "fg"
+"ui.text.focus" = "darkGray"
+"ui.text.inactive" = "comment"
+
+"ui.cursor" = { fg = "background", bg = "caret" }
+"ui.cursor.match" = { bg = "selection", modifiers = ["bold"] }
+"ui.cursor.select" = { fg = "background", bg = "darkGray" }
+"ui.cursorline.primary" = { bg = "lineHighlight" }
+
+"ui.selection" = { bg = "selection" }
+
+"ui.linenr" = { fg = "invisibles" }
+"ui.linenr.selected" = { fg = "darkGray", modifiers = ["bold"] }
+
+"ui.gutter" = { bg = "background" }
+
+"ui.statusline" = { fg = "darkGray", bg = "lineHighlight" }
+"ui.statusline.inactive" = { fg = "comment", bg = "lineHighlight" }
+"ui.statusline.normal" = { fg = "background", bg = "darkGray", modifiers = ["bold"] }
+"ui.statusline.insert" = { fg = "background", bg = "green", modifiers = ["bold"] }
+"ui.statusline.select" = { fg = "background", bg = "pink", modifiers = ["bold"] }
+"ui.statusline.separator" = { fg = "comment", bg = "lineHighlight" }
+
+"ui.bufferline" = { fg = "comment", bg = "lineHighlight" }
+"ui.bufferline.active" = { fg = "fg", bg = "background", modifiers = ["bold"] }
+"ui.bufferline.background" = { bg = "lineHighlight" }
+
+"ui.popup" = { fg = "fg", bg = "lineHighlight" }
+"ui.window" = { fg = "comment", bg = "background" }
+"ui.help" = { fg = "fg", bg = "lineHighlight" }
+
+"ui.menu" = { fg = "fg", bg = "lineHighlight" }
+"ui.menu.selected" = { fg = "darkGray", bg = "selection", modifiers = ["bold"] }
+
+"ui.virtual.ruler" = { bg = "lineHighlight" }
+"ui.virtual.whitespace" = "invisibles"
+"ui.virtual.indent-guide" = "invisibles"
+"ui.virtual.inlay-hint" = { fg = "comment", modifiers = ["italic"] }
+"ui.virtual.jump-label" = { fg = "orange", modifiers = ["bold"] }
+
+"ui.highlight" = { bg = "lineHighlight" }
+
+"ui.debug.breakpoint" = "red"
+"ui.debug.active" = "orange"
+
+"diagnostic.error" = { underline = { color = "red", style = "curl" } }
+"diagnostic.warning" = { underline = { color = "orange", style = "curl" } }
+"diagnostic.info" = { underline = { color = "blue", style = "curl" } }
+"diagnostic.hint" = { underline = { color = "comment", style = "curl" } }
+"diagnostic.unnecessary" = { modifiers = ["dim"] }
+"diagnostic.deprecated" = { modifiers = ["crossed_out"] }
+
+"error" = "red"
+"warning" = "orange"
+"info" = "blue"
+"hint" = "comment"
+
+[palette]
+background    = "#080b20"
+fg            = "#909090"
+darkGray      = "#CACACA"
+comment       = "#888888"
+invisibles    = "#474747"
+lineHighlight = "#242424"
+selection     = "#133853"
+caret         = "#0a8cb9"
+blue          = "#819DC2"
+green         = "#7DA76F"
+red           = "#D38569"
+pink          = "#B98EB2"
+orange        = "#BC9550"
+string        = "#5e8553"

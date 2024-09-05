@@ -1,0 +1,180 @@
+{
+  "cleanupPeriodDays": 10,
+  "env": {
+    "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "75",
+    "CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY": "1",
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "CLAUDE_CODE_FORK_SUBAGENT": "1",
+    "CLAUDE_CODE_NO_FLICKER": "1",
+    "DISABLE_ERROR_REPORTING": "1",
+    "DISABLE_NON_ESSENTIAL_MODEL_CALLS": "1",
+    "DISABLE_TELEMETRY": "1",
+    "ENABLE_TOOL_SEARCH": "auto:5",
+    "MAX_THINKING_TOKENS": "50000"
+  },
+  "permissions": {
+    "allow": [
+      "Skill(agent-browser:agent-browser)",
+      "Skill(agent-browser)",
+      "Bash(agent-browser *)",
+      "Bash(openspec *)",
+      "Bash(docker *)",
+      "Bash(bun run *)",
+      "Bash(jq *)",
+      "Bash(ls *)",
+      "Bash(cat *)",
+      "Bash(sed *)",
+      "Bash(tee *)",
+      "Bash(echo *)",
+      "Bash(head *)",
+      "Bash(tail *)",
+      "Bash(find *)",
+      "Bash(grep *)",
+      "Bash(just *)",
+      "Bash(cargo *)",
+      "Bash(glab issue *)",
+      "Bash(glab api *)",
+      "Bash(glab mr *)",
+      "Bash(git log *)",
+      "Bash(git add *)",
+      "Bash(git diff *)",
+      "Bash(git fetch *)",
+      "Bash(git status *)",
+      "Bash(git reflog *)",
+      "Bash(git rebase *)",
+      "Bash(git commit *)",
+      "Bash(glab issue *)",
+      "Bash(glab api *)",
+      "Bash(glab mr *)",
+      "Read(~/.config/**)",
+      "Read(~/.claude/**)",
+      "Read(~/.claude-*/**)",
+      "Write(~/.docker/buildx/activity/**)",
+      "mcp__pencil"
+    ],
+    "deny": [
+      "Read(~/.ssh/**)",
+      "Edit(~/.ssh/**)",
+      "Read(~/.aws/**)",
+      "Edit(~/.aws/**)",
+      "Read(~/.kube/**)",
+      "Edit(~/.kube/**)",
+      "Read(~/.config/**)",
+      "Edit(~/.config/**)",
+      "Read(~/Library/**)",
+      "Edit(~/Library/**)",
+      "Bash(rm -rf *)",
+      "Bash(rm -fr *)",
+      "Bash(sudo *)",
+      "Bash(mkfs *)",
+      "Bash(dd *)",
+      "Bash(wget *|*bash*)",
+      "Bash(git push --force*)",
+      "Bash(git push *--force*)",
+      "Bash(git reset --hard*)"
+    ],
+    "defaultMode": "acceptEdits"
+  },
+  "enableAllProjectMcpServers": true,
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/scripts/statusline.sh"
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/scripts/session-start.sh"
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "agent-browser@agent-browser": true,
+    "claude-code-setup@claude-plugins-official": false,
+    "claude-md-management@claude-plugins-official": false,
+    "csharp-lsp@claude-plugins-official": false,
+    "frontend-design@claude-plugins-official": false,
+    "hookify@claude-plugins-official": false,
+    "playground@claude-plugins-official": false,
+    "rust-analyzer-lsp@claude-plugins-official": false,
+    "skill-creator@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": false,
+    "typescript-lsp@claude-plugins-official": false,
+    "alt5-cc@Alt5": true,
+    "plugin-dev@claude-plugins-official": true,
+    "tmux-notify@my-plugins": true
+  },
+  "extraKnownMarketplaces": {
+    "agent-browser": {
+      "source": {
+        "source": "github",
+        "repo": "vercel-labs/agent-browser"
+      },
+      "autoUpdate": true
+    },
+    "impeccable": {
+      "source": {
+        "source": "github",
+        "repo": "pbakaus/impeccable"
+      },
+      "autoUpdate": true
+    },
+    "my-plugins": {
+      "source": {
+        "source": "directory",
+        "path": "/Users/sergey/Projects/marketplace"
+      },
+      "autoUpdate": true
+    },
+    "kenn-dev": {
+      "source": {
+        "source": "directory",
+        "path": "/Users/sergey/Projects/ai/code_with_me"
+      }
+    }
+  },
+  "sandbox": {
+    "enabled": true,
+    "autoAllowBashIfSandboxed": true,
+    "network": {
+      "allowUnixSockets": [
+        "~/.docker/run/docker.sock",
+        "/private/tmp/tmux-501/default"
+      ]
+    },
+    "filesystem": {
+      "allowWrite": [
+        "~/.cargo/target",
+        "~/.docker/buildx/activity"
+      ],
+      "allowRead": [
+        "~/.config/git"
+      ]
+    },
+    "excludedCommands": [
+      "docker *",
+      "agent-browser *"
+    ]
+  },
+  "spinnerTipsEnabled": false,
+  "effortLevel": "medium",
+  "plansDirectory": "./docs/plans",
+  "autoMemoryEnabled": true,
+  "autoDreamEnabled": true,
+  "skipDangerousModePermissionPrompt": true,
+  "theme": "dark-ansi",
+  "editorMode": "normal",
+  "preferredNotifChannel": "auto",
+  "autoCompactEnabled": false,
+  "showTurnDuration": true,
+  "terminalProgressBarEnabled": false,
+  "teammateMode": "auto",
+  "voiceEnabled": false,
+  "disableErrorReporting": true,
+  "disableFeedbackDisplay": true,
+  "disableTelemetry": true
+}

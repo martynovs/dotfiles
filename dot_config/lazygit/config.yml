@@ -1,0 +1,41 @@
+git:
+  pagers:
+    - pager: rediff pager
+
+gui:
+  sidePanelWidth: 0.25
+
+# Skip the "press enter to return to lazygit" pause after a subprocess (rediff).
+promptToReturnFromSubprocess: false
+
+keybinding:
+  universal:
+    quit: q
+    quit-alt1: §
+
+customCommands:
+  - key: <c-g>
+    context: files
+    description: Open local changes in rediff
+    command: "rediff diff"
+    output: terminal
+  - key: <c-g>
+    context: commits
+    description: Open selected commit in rediff
+    command: "rediff show {{.SelectedCommit.Hash}}"
+    output: terminal
+  - key: <c-g>
+    context: subCommits
+    description: Open selected commit in rediff
+    command: "rediff show {{.SelectedCommit.Hash}}"
+    output: terminal
+  - key: <c-g>
+    context: reflogCommits
+    description: Open selected commit in rediff
+    command: "rediff show {{.SelectedCommit.Hash}}"
+    output: terminal
+  - key: <c-g>
+    context: localBranches
+    description: Diff local state vs selected branch in rediff
+    command: "rediff diff --from {{.SelectedLocalBranch.Name}}"
+    output: terminal
