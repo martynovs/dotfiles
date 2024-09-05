@@ -1,0 +1,16 @@
+theme = 'flexoki_dark'
+
+[keys.normal.space.t]
+1 = ':theme flexoki_dark'
+2 = ':theme ayu_dark'
+
+[keys.normal]
+"§" = 'command_mode'
+
+[editor]
+true-color = true
+
+[editor.cursor-shape]
+insert = 'bar'
+normal = 'block'
+select = 'underline'

@@ -1,0 +1,38 @@
+#!/bin/bash
+
+dir=$(dirname -- "$(readlink -f "${BASH_SOURCE}")")
+source $dir/helpers
+
+while (( "$#" ))
+do
+  case $1 in
+    brew:*) 
+      package=${1#"brew:"}
+      header "Installing brew package:$unstyled $package"
+      brew install $package
+    ;;
+    cargo:*) 
+      package=${1#"cargo:"}
+      header "Installing cargo package:$unstyled $package"
+      cargo_install $package
+    ;;
+    apt:*)
+      package=${1#"apt:"}
+      header "Installing apt package:$unstyled $package"
+      run "apt-get install -y $package"
+    ;;
+    yum:*)
+      package=${1#"yum:"}
+      header "Installing yum package:$unstyled $package"
+      run "yum install -y $package"
+    ;;
+    *) 
+      if [ -x "$dir/$1/install" ]; then
+        run "$dir/$1/install"
+      else
+        echo "Unknown package: $1"
+      fi
+    ;;
+  esac
+  shift
+done

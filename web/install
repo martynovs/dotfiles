@@ -1,0 +1,24 @@
+#!/bin/bash
+
+dir=$(dirname -- "$(readlink -f "${BASH_SOURCE}")")
+source $dir/../helpers
+
+header "Installing web packages"
+
+packages=(
+  'node'     # node.js
+  'corepack' # node.js package managers
+
+  'jq'  # json filter
+  'jnv' # json viewer tui with jq like filter
+
+  'encoredev/tap/encore' # https://github.com/encoredev/encore
+
+  # lang servers for editor
+  'typescript-language-server' 
+  'vscode-langservers-extracted'
+)
+
+brew_install ${packages[*]}
+
+eval $dir/configure

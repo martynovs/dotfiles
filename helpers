@@ -1,0 +1,25 @@
+#!/bin/bash
+
+set -e
+
+unstyled="\033[0m"
+header() { echo; echo -e "\033[1m\033[0;32m$1$unstyled"; }
+
+run() { echo $1; eval $1; }
+
+installed() { [ -x "$(command -v $1)" ]; }
+
+is_macos() { [[ $OSTYPE == 'darwin'* ]]; }
+
+is_docker() { [ -e /.dockerenv ]; }
+
+brew_install() { run "brew install $*"; }
+
+cargo_install() { run "cargo install --locked $*"; }
+
+add_fish_config() {
+    local dir
+    dir="$HOME/.config/fish/conf.d/"
+    mkdir -p "$dir"
+    run "ln -sf $1 $dir"
+}

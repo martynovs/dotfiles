@@ -1,0 +1,12 @@
+#!/bin/bash
+
+dir=$(dirname -- "$(readlink -f "${BASH_SOURCE}")")
+source $dir/../helpers
+
+packages=(
+  'slides'   # presentation in terminal from markdown
+  'marksman' # markdown language server
+)
+
+header "Installing slides packages"
+brew_install ${packages[*]}

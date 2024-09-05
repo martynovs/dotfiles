@@ -1,0 +1,62 @@
+#!/bin/bash
+
+dir=$(dirname -- "$(readlink -f "${BASH_SOURCE}")")
+source $dir/../helpers
+
+packages=(
+  'tmux'      # windows+panes in teminal
+  'tpm'       # tmux plugin manager
+  'joshmedeski/sesh/sesh' # tmux session manager
+
+  'fish'      # shell
+  'fisher'    # fish plugin manager
+  'starship'  # shell prompt
+  'cmatrix'   # terminal screensaver
+
+  'helix'     # vim-like editor for mere mortals
+  'nvim'      # neovim editor
+
+  'lazygit'   # git tui
+  'git-delta' # colored git diff
+
+  'sshs'      # ssh tui to select connection
+  'zoxide'    # cd
+  'eza'       # ls
+  'bat'       # cat
+  'tokei'     # loc
+  'fd'        # find
+  'ripgrep'   # grep
+  'gdu'       # du with tui
+  'fzf'       # fuzzy finder
+  'tree'      # directory tree
+  'broot'     # directory tree tui
+  'wget'      # file downloader
+)
+
+if is_macos; then
+  packages+=(
+    'git' # macos bundles outdated git
+    'font-fira-code-nerd-font' # font for terminal and vscode
+  )
+fi
+
+header "Installing shell packages"
+brew_install ${packages[*]}
+
+wget -P "$(bat --config-dir)/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Frappe.tmTheme
+bat cache --build
+
+shell=$(command -v fish)
+
+if ! grep -q $shell /etc/shells; then
+  header "Add fish to /etc/shells"
+  echo $shell | sudo tee -a /etc/shells
+fi
+
+if [[ "$SHELL" != "$shell" ]]; then
+  header "Register fish as default shell"
+  chsh -s $shell
+  echo $shell
+fi
+
+eval $dir/configure

@@ -1,0 +1,14 @@
+#!/bin/bash
+
+dir=$(dirname -- "$(readlink -f "${BASH_SOURCE}")")
+source $dir/../helpers
+
+packages=(
+  'go'    # golang
+  'gopls' # lang server for editor
+)
+
+header "Installing golang packages"
+brew_install ${packages[*]}
+
+eval $dir/configure

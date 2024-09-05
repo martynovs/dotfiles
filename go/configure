@@ -1,0 +1,7 @@
+#!/bin/bash
+
+dir=$(dirname -- "$(readlink -f "${BASH_SOURCE}")")
+source $dir/../helpers
+
+header "Configuring go"
+add_fish_config "$dir/go_config.fish"

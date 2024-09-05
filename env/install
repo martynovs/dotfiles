@@ -1,0 +1,16 @@
+#!/bin/bash
+
+dir=$(dirname -- "$(readlink -f "${BASH_SOURCE}")")
+source $dir/../helpers
+
+packages=(
+  'direnv' # load/unload env variables from .env files when changing directory
+  # How to integrate sops into direnv https://github.com/direnv/direnv/wiki/Sops
+  'sops'   # encryption for secrets to use in env variables
+  'age'    # recommended pgp alternative for sops
+)
+
+header "Installing env packages"
+brew_install ${packages[*]}
+
+eval $dir/configure
