@@ -1,0 +1,12 @@
+[alias]
+	l = log --graph --all --decorate --pretty=format:'%C(magenta)%h  %C(white)%an  %C(green bold)%ar  %C(auto)%D%n%B%n'
+	st = status
+	co = checkout
+	br = branch
+	ci = commit -S
+	am = amend
+	fpush = push --force-with-lease
+	spush = push --signed
+	fspush = push --force-with-lease --signed
+
+    sync = "!git commit -m \"sync: $(whoami)@$(hostname) $(date '+%Y-%m-%d %H:%M:%S')\""
