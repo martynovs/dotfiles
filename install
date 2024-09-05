@@ -1,0 +1,66 @@
+#!/bin/bash
+
+__installers_dir__="$(dirname -- "$(readlink -f "${BASH_SOURCE[0]}")")/installers"
+
+declare -a known_pkgs=()
+
+for file in $(find "$__installers_dir__" -name "*.ts" ! -name "_*" | sort); do
+  file=${file##*/}
+  known_pkgs+=("${file%.ts}")
+done
+
+is_known_pkg() {
+  local needle="$1"
+  for p in "${known_pkgs[@]}"; do
+    if [[ "$p" == "$needle" ]]; then
+      return 0
+    fi
+  done
+  return 1
+}
+
+declare -a pkgs=()
+declare -a flags=()
+
+for token in "$@"; do
+  if is_known_pkg "$token"; then
+    pkgs+=("$token")
+  else
+    flags+=("$token")
+  fi
+done
+
+if [ ${#pkgs[@]} -eq 0 ]; then
+  echo "Please specify packages to install."
+  echo "Available packages: ${known_pkgs[*]}"
+  exit 1
+fi
+
+dry=false
+for f in "${flags[@]}"; do
+  case "$f" in
+    --dry)
+      dry=true
+      break
+      ;;
+  esac
+done
+
+if command -v apt >/dev/null 2>&1; then
+  flags+=("--pkg" "apt")
+elif command -v dnf >/dev/null 2>&1; then
+  flags+=("--pkg" "dnf")
+fi
+
+header() { echo; echo -e "\033[1m\033[0;32m$1\033[0m"; }
+
+for pkg in "${pkgs[@]}"; do
+  header "Installing $pkg packages"
+  eval "$(bun run "$__installers_dir__/$pkg.ts" "${flags[*]}")"
+
+  if [ "$dry" = false ] && [ -x "$__installers_dir__/$pkg.sh" ]; then
+    header "Configuring $pkg packages"
+    # shellcheck source=/dev/null
+    source "$__installers_dir__/$pkg.sh"
+  fi
+done
