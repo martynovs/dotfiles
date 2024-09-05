@@ -1,0 +1,6 @@
+--when.commands = ["diff", "show"]
+
+[ui]
+pager = ["sh", "-c", "diff-so-fancy | bat -p"]
+diff-formatter = ":git"
+
