@@ -1,0 +1,38 @@
+# theme = "base16_transparent"
+# theme = "everblush"
+# theme = "vintage"
+# theme = "voxed"
+theme = "voxed-transparent"
+
+[editor]
+color-modes = true
+end-of-line-diagnostics = "hint"
+# middle-click-paste = false
+# bufferline = "always"
+
+# [editor.statusline]
+# left = ["mode", "spinner", "file-absolute-path", "read-only-indicator", "file-modification-indicator", "separator", "version-control"]
+
+# [editor.cursor-shape]
+# insert = "underline"
+
+# [editor.file-picker]
+# hidden = false
+# ignore = false
+# git-ignore = false
+
+[editor.inline-diagnostics]
+cursor-line = "warning"
+
+[editor.lsp]
+display-inlay-hints = true
+
+# use yazi as file finder
+[keys.normal]
+f = [
+  ':sh rm -f /tmp/helix-file-selection',
+  ':insert-output yazi %{buffer_name} --chooser-file=/tmp/helix-file-selection',
+  ':insert-output echo "\x1b[?1049h\x1b[?2004h" > /dev/tty',
+  ':open %sh{cat /tmp/helix-file-selection}',
+  ':redraw',
+]
