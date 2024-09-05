@@ -1,0 +1,37 @@
+[core]
+	# pager = delta
+	pager = diff-so-fancy | bat -p
+	difftool = true
+
+[diff]
+    context = 3  # less context in diffs
+    renames = copies  # detect copies as renames in diffs
+	colorMoved = default
+    interHunkContext = 10  # merge near hunks in diffs
+
+[interactive]
+	# diffFilter = delta --color-only --features=interactive
+	diffFilter = diff-so-fancy --patch
+	singlekey = true
+
+[delta]
+	navigate = true
+	line-numbers = true
+	hyperlinks = true
+	features = decorations
+	hyperlinks-file-link-format = vscode://file/{path}:{line}
+	file-style = bold yellow ul
+	file-decoration-style = yellow ol ul
+	hunk-header-decoration-style = blue
+	hunk-header-line-number-style = purple bold
+
+[diff-so-fancy]
+	markEmptyLines = false
+
+[difftool]
+    # Run the difftool immediately, don't ask 'are you sure' each time.
+    prompt = false
+
+[difftool "difftastic"]
+    # See `man git-difftool` for a description of MERGED, LOCAL and REMOTE.
+    cmd = difft "$MERGED" "$LOCAL" "abcdef1" "100644" "$REMOTE" "abcdef2" "100644"

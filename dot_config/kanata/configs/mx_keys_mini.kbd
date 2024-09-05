@@ -1,0 +1,95 @@
+;; Kanata docs
+;; https://github.com/jtroo/kanata/blob/main/docs/config.adoc
+
+;; OS key code mappings
+;; https://github.com/jtroo/kanata/blob/main/parser/src/keys/mod.rs
+
+(defcfg
+  process-unmapped-keys yes
+  log-layer-changes no
+  danger-enable-cmd yes
+  concurrent-tap-hold yes
+
+  ;; Apply this config only to MX Keys Mini keyboard
+  macos-dev-names-include (
+    "MX Keys Mini"
+  )
+
+  ;; When any non-chord activation happens, this timeout begins. Until this timeout expires
+  ;; all inputs will immediately skip chords processing and be processed by the active layer.
+  ;; chords-v2-min-idle 250
+)
+
+(deflocalkeys-macos
+  grv	86 ;; KEY_102ND
+)
+
+;; defsrc defines the keys that will be intercepted by kanata. The order of the
+;; keys matches with deflayer declarations and all deflayer declarations must
+;; have the same number of keys as defsrc. Any keys not listed in defsrc will
+;; be passed straight to the operating system.
+(defsrc 
+  esc   f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12  f13  del
+  grv   1    2    3    4    5    6    7    8    9    0    -    =    bspc
+  tab   q    w    e    r    t    y    u    i    o    p    [    ]    ret
+  caps  a    s    d    f    g    h    j    k    l    ;    '    \
+  lsft  `    z    x    c    v    b    n    m    ,    .    /   rsft  ▲
+  lctl  fn  lalt lmet           spc                 rmet ralt   ◀   ▼    ▶
+)
+
+;; Home row mods timing configuration
+(defvar
+  tap  500   ;; Time to wait for tap vs hold decision
+  hold 650   ;; Time to wait before hold action triggers
+)
+
+(deftemplate tap-or-hold (tapact holdact)
+  (tap-hold-release $tap $hold $tapact $holdact)
+)
+
+;; Define aliases for home row mods and hyper key
+(defalias
+  ;; Hyper key (Ctrl+Alt+Shift+Cmd combination)
+  hyp (multi lctl lalt lsft lmet)
+  ;; Super key (Ctrl+Alt+Shift combination)
+  sup (multi lctl lalt lsft)
+
+  esc (t! tap-or-hold esc @sup)
+  grv (t! tap-or-hold grv ralt)
+  tab (t! tap-or-hold tab (layer-while-held hyper))
+  ret (t! tap-or-hold ret (layer-while-held numpad))
+  ' (t! tap-or-hold ' @sup)
+  \ (t! tap-or-hold \ @hyp)
+  rsft (t! tap-or-hold enter rsft)
+)
+
+(deflayer base
+  @esc   _    _    _    _    _    _    _    _    _    _    _    _    _  _
+  @grv   _    _    _    _    _    _    _    _    _    _    _    _    _
+  @tab   _    _    _    _    _    _    _    _    _    _    _    _    @ret
+  lctl   _    _    _    _    _    _    _    _    _    _   @'   @\
+  _      _    _    _    _    _    _    _    _    _    _    _   @rsft _
+  @ret   _    _    _              _              _    _         _    _    _
+)
+
+(deftemplate H (k)
+  (multi lctl lalt lsft lmet $k)
+)
+
+(deflayer hyper
+  (t! H esc) _        _        _        _        _        _        _        _        _        _        _        _        _ (t! H del)
+  (t! H grv) (t! H 1) (t! H 2) (t! H 3) (t! H 4) (t! H 5) (t! H 6) (t! H 7) (t! H 8) (t! H 9) (t! H 0) (t! H -) (t! H =) (t! H bspc)
+  XX         (t! H q) (t! H w) (t! H e) (t! H r) (t! H t) (t! H y) (t! H u) (t! H i) (t! H o) (t! H p) (t! H [) (t! H ]) (t! H ret)
+  XX         (t! H a) (t! H s) (t! H d) (t! H f) (t! H g) (t! H h) (t! H j) (t! H k) (t! H l) (t! H ;) (t! H ') (t! H \)
+  XX         (t! H `) (t! H z) (t! H x) (t! H c) (t! H v) (t! H b) (t! H n) (t! H m) (t! H ,) (t! H .) (t! H /) XX   pgup
+  XX         _        XX       XX                         (t! H spc)                 XX       XX                home pgdn end
+)
+
+(deflayer numpad
+  @esc  _    _    _    _    _    _    _    _    _    _    _    _    _    _
+  grv   S-1  S-2  S-3  S-4  S-5  S-6  S-7  S-8  S-9  S-0  kp-  kp+  _
+  @hyp  pgdn ▲    pgup S-.  XX   XX   XX   7    8    9    kp*  kp/  XX
+  lctl  ◀    ▼    ▶    S-,  XX   XX   XX   4    5    6    kp.  S-6
+  _     A-◀  A-◀  A-▶  A-▶  XX   XX   XX   0    1    2    3    S--  _
+  XX    _    _    _              _              _    _         _    _    _
+)

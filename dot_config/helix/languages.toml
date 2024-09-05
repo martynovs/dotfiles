@@ -1,0 +1,17 @@
+[[language]]
+name = "c-sharp"
+scope = "source.cs"
+roots = [".sln", ".csproj"]
+file-types = ["cs", "csx"]
+auto-format = true
+language-servers = ["roslyn"]
+
+[language-server.roslyn]
+command = "roslyn-language-server"
+args = ["--stdio", "--autoLoadProjects"]
+timeout = 120
+
+[[language]]
+name = "rust"
+formatter = { command = "rustfmt" }
+auto-format = true

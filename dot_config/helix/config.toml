@@ -1,0 +1,90 @@
+theme = "my-kary-pro-dark"
+
+[keys.insert]
+"C-a" = "goto_line_start"
+"C-e" = "goto_line_end_newline"
+"C-w" = { "C-w" = ":wq" }
+"C-c" = { "C-c" = ":cq!" }
+
+[keys.normal]
+"S-down" = [
+  "extend_to_line_bounds",
+  "delete_selection",
+  "paste_after",
+  "select_mode",
+  "goto_line_start",
+  "normal_mode",
+] # Move line(s) down
+"S-up" = [
+  "extend_to_line_bounds",
+  "delete_selection",
+  "move_line_up",
+  "paste_before",
+  "flip_selections",
+] # Move line(s) up
+
+[keys.normal.space]
+# use yazi to select files
+C-f = [
+  ':sh rm -f /tmp/helix-file-selection',
+  ':insert-output yazi %{buffer_name} --chooser-file=/tmp/helix-file-selection',
+  ':insert-output echo "\x1b[?1049h\x1b[?2004h" > /dev/tty',
+  ':open %sh{cat /tmp/helix-file-selection}',
+  ':redraw',
+]
+
+[keys.normal.space.C-t]
+"1" = ":theme my-kary-pro-dark"
+"2" = ":theme flexoki_dark"
+"0" = ":config-reload"
+
+[editor]
+color-modes = true
+end-of-line-diagnostics = "hint"
+# middle-click-paste = false
+# bufferline = "always"
+
+# [editor.cursor-shape]
+# insert = "underline"
+
+# [editor.file-picker]
+# hidden = false
+# ignore = false
+# git-ignore = false
+
+[editor.inline-diagnostics]
+cursor-line = "warning"
+
+[editor.lsp]
+display-inlay-hints = true
+
+# [editor.statusline]
+# left = ["mode", "spinner", "file-absolute-path", "read-only-indicator", "file-modification-indicator", "separator", "version-control"]
+
+[editor.statusline]
+left = [
+  "spinner",
+  "mode",
+  "spacer",
+  "version-control",
+  "spacer",
+  "separator",
+  "file-name",
+  "read-only-indicator",
+  "file-modification-indicator",
+
+]
+center = []
+right = [
+  "diagnostics",
+  "workspace-diagnostics",
+  "position",
+  "total-line-numbers",
+  "position-percentage",
+  "file-encoding",
+  "file-line-ending",
+  "file-type",
+  "register",
+  "selections",
+]
+separator = "│"
