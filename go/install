@@ -1,0 +1,17 @@
+#!/bin/bash
+
+dir=$(dirname -- "$(readlink -f "${BASH_SOURCE}")")
+source $dir/../helpers
+
+packages=(
+  'go'    # golang
+  'gopls' # lang server
+
+  # distributed app framework
+  'encoredev/tap/encore' # https://github.com/encoredev/encore
+)
+
+header "Install brew packages"
+brew_install ${packages[*]}
+
+eval $dir/configure

@@ -1,0 +1,96 @@
+#!/bin/bash
+
+dir=$(dirname -- "$(readlink -f "${BASH_SOURCE}")")
+source $dir/../helpers
+
+header "Setup config files"
+fish_dir=$(fish_home)
+run "mkdir -p $fish_dir"
+run "ln -sf $dir/configs/fish/fish_config.fish $fish_dir/config.fish"
+run "ln -sf $dir/configs/fish/fish_plugins $fish_dir/fish_plugins"
+add_fish_function "$dir/configs/fish/functions/__fish_brew_home.fish"
+add_fish_config "$dir/configs/fish/shell_config.fish"
+add_fish_config "$dir/configs/fish/direnv_config.fish"
+add_fish_config "$dir/configs/fish/docker_config.fish"
+add_fish_config "$dir/configs/fish/tmux_config.fish"
+add_fish_config "$dir/configs/fish/git_config.fish"
+
+run "ln -sf $dir/configs/ghostty.config ~/.config/ghostty"
+run "ln -sf $dir/configs/starship.toml ~/.config/starship.toml"
+
+direnv_dir="$HOME/.config/direnv"
+run "mkdir -p $direnv_dir"
+run "ln -sf $dir/configs/direnv.toml $direnv_dir/direnv.toml"
+
+tmux_dir="$HOME/.tmux"
+run "mkdir -p $tmux_dir"
+run "ln -sf $dir/configs/tmux.conf $HOME/.tmux.conf"
+run "echo \"run $(brew --prefix)/opt/tpm/share/tpm/tpm\" > $tmux_dir/tmux.conf"
+run "$(brew --prefix)/opt/tpm/share/tpm/bin/install_plugins"
+
+helix_dir="$HOME/.config/helix"
+run "mkdir -p $helix_dir"
+run "ln -sf $dir/configs/helix_config.toml $helix_dir/config.toml"
+
+bat_dir=$(dirname "$(bat --config-file)")
+run "mkdir -p $bat_dir"
+run "ln -sf $dir/configs/bat.config $(bat --config-file)"
+
+# this works only in interactive mode
+if [ -t 0 ]; then
+  run "fish -c 'fisher update > /dev/null'"
+fi
+
+header "Configuring git"
+# check this for inspiration https://github.com/paulirish/dotfiles/blob/main/.gitconfig
+# and view this presentaion https://www.youtube.com/watch?v=aolI_Rz0ZqY
+
+gals() { run "git config set --global alias.$1 \"$2\""; }
+gset() { run "git config set --global $1 \"$2\""; }
+gyes() { run "git config set --global --type bool $1 true"; }
+
+gals st status
+gals co checkout
+gals br branch
+# gals ci commit
+gals ci "commit -S"
+gals md amend
+gals fpush "push --force-with-lease"
+gals spush "push --signed"
+gals fspush "push --force-with-lease --signed"
+
+gset init.defaultBranch main
+
+# update branches that depend on rebased commits and remember conflits resolution for future
+gyes rerere.enabled
+gyes rebase.updateRefs
+
+# show git branch output in multiple columns sorted by last commit date
+gset column.ui auto
+gset branch.sort -commiterdate
+
+# use ssh to sign commits
+gset gpg.format ssh
+gset user.signingkey ~/.ssh/id_ed25519.pub
+
+# use git-delta to colorize diff
+gset core.pager delta
+gset merge.conflictstyle diff3
+gset diff.colorMoved default
+gset interactive.diffFilter "delta --color-only --features=interactive"
+gyes delta.navigate
+gyes delta.line-numbers
+gyes delta.hyperlinks
+gset delta.features decorations
+gset delta.hyperlinks-file-link-format "vscode://file/{path}:{line}"
+gset delta.file-style "bold yellow ul"
+gset delta.file-decoration-style "yellow ol ul"
+gset delta.hunk-header-decoration-style "blue"
+gset delta.hunk-header-line-number-style "purple bold"
+
+if installed 'jj'; then
+  jset() { run "jj config set --user $1 \"$2\""; }
+  jset ui.default-command log
+  jset user.name "$(git config user.name)"
+  jset user.email "$(git config user.email)"
+fi

@@ -1,0 +1,7 @@
+#!/bin/bash
+
+dir=$(dirname -- "$(readlink -f "${BASH_SOURCE}")")
+source $dir/../helpers
+
+header "Configuring dotnet"
+add_fish_config "$dir/dotnet_config.fish"

@@ -1,0 +1,25 @@
+#!/bin/bash
+
+dir=$(dirname -- "$(readlink -f "${BASH_SOURCE}")")
+source $dir/../helpers
+
+packages=(
+)
+
+cargo_binaries=(
+  'tlauc' # unicode converter for tla specs
+)
+
+if is_macos; then
+  packages+=(
+    'tla+-toolbox' # main tla+ app
+  )
+fi
+
+header "Install brew packages"
+brew_install ${packages[*]}
+
+header "Install cargo binaries"
+cargo_install ${cargo_binaries[*]}
+
+# eval $dir/configure

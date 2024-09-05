@@ -1,0 +1,7 @@
+#!/bin/bash
+
+dir=$(dirname -- "$(readlink -f "${BASH_SOURCE}")")
+source $dir/../helpers
+
+header "Configuring rust"
+add_fish_config "$dir/rust_config.fish"

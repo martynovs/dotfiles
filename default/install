@@ -1,0 +1,76 @@
+#!/bin/bash
+
+dir=$(dirname -- "$(readlink -f "${BASH_SOURCE}")")
+source $dir/../helpers
+
+packages=(
+  'tmux'      # windows+panes in teminal
+  'tpm'       # tmux plugin manager
+  'joshmedeski/sesh/sesh' # tmux session manager
+
+  'fish'      # shell
+  'fisher'    # fish plugin manager
+  'starship'  # shell prompt
+  'direnv'    # load/unload .envrc files when changing directory
+
+  'nvim'      # neovim editor
+  'helix'     # vim-like editor for mere mortals
+
+  'slides'    # presentation in terminal from markdown
+  'marksman'  # markdown lang server
+
+  'git'
+  'lazygit'   # git tui
+  'git-delta' # colored git diff
+  'jj'        # maybe better git alternative
+  'lazyjj'    # jj tui
+
+  'sshs'      # ssh tui to select connection
+  'zoxide'    # cd
+  'eza'       # ls
+  'bat'       # cat
+  'tokei'     # loc
+  'fd'        # find
+  'ripgrep'   # grep
+  'gdu'       # du with tui
+  'fzf'       # fuzzy finder
+  'tree'      # directory tree
+  'broot'     # directory tree tui
+  'jq'        # json filter
+  'jnv'       # json viewer tui with jq like filters
+  'wget'      # file downloader
+)
+
+if is_macos; then
+  packages+=(
+    'raycast' # spotlight replacement
+    'alt-tab' # alt tab with preview
+    'ghostty' # terminal
+    'iina'                          # media player
+    'handbrake'                     # video converter
+    'mediahuman-audio-converter'    # audio converter
+    'font-fira-code-nerd-font'      # font for vscode
+    'font-jetbrains-mono-nerd-font' # font for terminal
+  )
+fi
+
+header "Install brew packages"
+brew_install ${packages[*]}
+
+wget -P "$(bat --config-dir)/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Frappe.tmTheme
+bat cache --build
+
+shell=$(command -v fish)
+
+if ! grep -q $shell /etc/shells; then
+  header "Add fish to /etc/shells"
+  echo $shell | sudo tee -a /etc/shells
+fi
+
+if [[ "$SHELL" != "$shell" ]]; then
+  header "Register fish as default shell"
+  chsh -s $shell
+  echo $shell
+fi
+
+eval $dir/configure

@@ -1,0 +1,17 @@
+#!/bin/bash
+
+dir=$(dirname -- "$(readlink -f "${BASH_SOURCE}")")
+source $dir/../helpers
+
+packages=(
+  'uv'     # python env and package manager
+  'poetry' # another one package manager
+  'python'
+  'ruff'   # linter
+  'ollama' # ai models local runner
+)
+
+header "Install brew packages"
+brew_install ${packages[*]}
+
+# exec $dir/configure
