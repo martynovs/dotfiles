@@ -1,0 +1,73 @@
+#!/bin/bash
+
+set -e
+
+unstyled="\033[0m"
+header() { echo; echo -e "\033[1m\033[0;32m$1$unstyled"; }
+
+run() { echo $1; eval $1; }
+
+installed() { [ -x "$(command -v $1)" ]; }
+
+is_macos() { [[ $OSTYPE == 'darwin'* ]]; }
+
+im_root() { [[ $EUID -eq 0 ]]; }
+
+brew_install() { run "brew install $*"; }
+
+cargo_install() { run "cargo install --locked $*"; }
+
+pkg_manager() {
+    if installed 'apt'; then
+        echo 'apt'
+    elif installed 'dnf'; then
+        echo 'dnf'
+    fi
+}
+
+update_apt() {
+    if im_root; then
+        run "apt update"
+    else
+        run "sudo apt update"
+    fi
+}
+
+install_apt_packages() {
+    if im_root; then
+        run "apt install -y $*"
+    else
+        run "sudo apt install -y $*"
+    fi
+}
+
+install_dnf_packages() {
+    if im_root; then
+        run "dnf -y install $*"
+    else
+        run "sudo dnf -y install $*"
+    fi
+}
+
+fish_home() { echo "$HOME/.config/fish"; }
+
+add_fish_config() {
+    local dir
+    dir="$(fish_home)/conf.d/"
+    mkdir -p "$dir"
+    run "ln -sf $1 $dir"
+}
+
+add_fish_function() {
+    local dir
+    dir="$(fish_home)/functions/"
+    mkdir -p "$dir"
+    run "ln -sf $1 $dir"
+}
+
+add_fish_completion() {
+    local dir
+    dir="$(fish_home)/completions/"
+    mkdir -p "$dir"
+    run "ln -sf $1 $dir"
+}

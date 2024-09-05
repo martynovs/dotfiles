@@ -1,0 +1,10 @@
+#!/bin/bash
+
+dir=$(dirname -- "$(readlink -f "${BASH_SOURCE}")")
+source $dir/../helpers
+
+
+header "Configuring ghostty"
+ghostty_dir="$HOME/.config/ghostty"
+run "mkdir -p $ghostty_dir"
+run "ln -sf $dir/ghostty.config $ghostty_dir/config"

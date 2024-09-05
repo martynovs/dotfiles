@@ -1,0 +1,12 @@
+#!/bin/bash
+
+dir=$(dirname -- "$(readlink -f "${BASH_SOURCE}")")
+source $dir/../helpers
+
+$dir/install.ts $(pkg_manager) | bash
+
+if is_macos; then
+    run "gh extension install dlvhdr/gh-dash" # tui dashboard for github PR's
+fi
+
+source $dir/configure

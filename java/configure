@@ -1,0 +1,7 @@
+#!/bin/bash
+
+dir=$(dirname -- "$(readlink -f "${BASH_SOURCE}")")
+source $dir/../helpers
+
+header "Configuring java"
+add_fish_config "$dir/java.fish"
