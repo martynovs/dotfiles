@@ -1,0 +1,175 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+format = """
+[](color_bg_host)\
+$os\
+$username\
+$hostname\
+[](fg:color_bg_host bg:color_bg_path)\
+$directory\
+[](fg:color_bg_path bg:color_bg_repo)\
+$git_branch\
+$git_status\
+${custom.jj_status}\
+[](fg:color_bg_repo bg:color_bg_lang)\
+$rust\
+$dotnet\
+$golang\
+$nodejs\
+$python\
+[](fg:color_bg_lang bg:color_bg_tmux)\
+${custom.tmux}\
+[](fg:color_bg_tmux bg:color_bg_env)\
+$direnv\
+[](fg:color_bg_env)\
+$line_break $character"""
+
+right_format = """
+$time
+"""
+
+palette = 'gruvbox_dark'
+
+# https://github.com/morhetz/gruvbox?tab=readme-ov-file#dark-mode-1
+[palettes.gruvbox_dark]
+color_fg_host = '#1d2021'
+color_fg_path = '#1d2021'
+color_fg_repo = '#1d2021'
+color_fg_lang = '#1d2021'
+color_fg_tmux = '#ebdbb2'
+color_fg_env  = '#fbf1c7'
+
+color_bg_host = '#d65d0e'
+color_bg_path = '#d79921'
+color_bg_repo = '#689d6a'
+color_bg_lang = '#458588'
+color_bg_tmux = '#665c54'
+color_bg_env  = '#3c3836'
+
+color_green = '#98971a'
+color_red   = '#cc241d'
+
+
+# Host
+
+[os]
+disabled = false
+style = "fg:color_fg_host bg:color_bg_host"
+
+[os.symbols]
+Macos = "󰀵"
+Amazon = ""
+Alpine = ""
+Debian = "󰣚"
+Fedora = "󰣛"
+Ubuntu = "󰕈"
+Linux = "󰌽"
+
+[username]
+show_always = true
+aliases = { "sergey" = "me" }
+style_user = "fg:color_fg_host bg:color_bg_host"
+style_root = "fg:color_fg_host bg:color_bg_host"
+format = '[ $user ]($style)'
+
+[hostname]
+ssh_only = true
+style = "fg:color_fg_host bg:color_bg_host"
+format = "[@ $hostname ]($style)"
+
+
+# Directory
+
+[directory]
+style = "fg:color_fg_path bg:color_bg_path"
+format = "[ $path ]($style)"
+truncation_length = 5
+truncation_symbol = "…/"
+
+[directory.substitutions]
+"Documents" = "󰈙"
+"Downloads" = "󰇚"
+"Projects" = "󰲋 "
+
+
+# VCS
+
+[git_branch]
+style = "fg:color_fg_repo bg:color_bg_repo"
+format = '[  $branch ]($style)'
+
+[git_status]
+style = "fg:color_fg_repo bg:color_bg_repo"
+format = '[($all_status$ahead_behind )]($style)'
+
+[custom.jj_status]
+when = "jj root --ignore-working-copy"
+style = "fg:color_fg_repo bg:color_bg_repo"
+format = "[🥷 $output ]($style)"
+command = '''
+jj log --ignore-working-copy -r@ -n1 --no-graph -T "" --stat | tail -n1 | \
+sd "(\d+) files? changed, (\d+) insertions?\(\+\), (\d+) deletions?\(-\)" ' ${1}m ${2}+ ${3}-' | sd " 0." ""
+'''
+
+# Languages
+
+[rust]
+style = "fg:color_fg_lang bg:color_bg_lang"
+format = '[ ( $version) ]($style)'
+
+[dotnet]
+style = "fg:color_fg_lang bg:color_bg_lang"
+format = '[ 󰪮( $version) ]($style)'
+
+[golang]
+style = "fg:color_fg_lang bg:color_bg_lang"
+format = '[ 󰟓( $version) ]($style)'
+
+[nodejs]
+style = "fg:color_fg_lang bg:color_bg_lang"
+format = '[ 󰎙( $version) ]($style)'
+
+[python]
+style = "fg:color_fg_lang bg:color_bg_lang"
+format = '[ ( $version) ]($style)'
+
+
+# Environment
+
+[direnv]
+disabled = false
+style = "fg:color_fg_env bg:color_bg_env"
+format = '[ $loaded$allowed ]($style)'
+loaded_msg = "󱆄"
+unloaded_msg =""
+allowed_msg = ""
+denied_msg = "󱦃"
+not_allowed_msg = "󱦃"
+
+[custom.tmux]
+# when = "echo $TERM_PROGRAM | grep tmux"
+when = "echo $TERM_PROGRAM | grep tmux && tmux show -g status | grep 'status off'"
+style = "fg:color_fg_tmux bg:color_bg_tmux"
+format = "[ \\[$output\\] ]($style)"
+command = "tmux show automatic-rename | grep -q 'automatic-rename off' && tmux display-message -p '#S~#W###{window_index}' || tmux display-message -p '#S###{window_index}'"
+
+
+# Time
+
+[time]
+disabled = false
+time_format = "%R"
+style = "fg:color_fg_time bg:color_bg_time"
+# format = '[   $time ]($style)'
+format = '[ $time ]($style)'
+
+
+# Prompt character
+
+[line_break]
+disabled = false
+
+[character]
+disabled = false
+success_symbol = '[➜](fg:color_green)'
+error_symbol = '[](fg:color_red)'
